@@ -302,7 +302,7 @@ public final class NVActivityIndicatorPresenter {
             containerView.addConstraint(spacingConstraint)
             }())
 
-        guard let keyWindow = UIApplication.shared.keyWindow else { return }
+        guard let keyWindow = UIApplication.shared.windows.last else { return }
 
         keyWindow.addSubview(containerView)
 
