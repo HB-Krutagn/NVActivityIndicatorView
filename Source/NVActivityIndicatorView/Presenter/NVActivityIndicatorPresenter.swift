@@ -260,61 +260,77 @@ public final class NVActivityIndicatorPresenter {
 
     fileprivate func show(with activityData: ActivityData, _ fadeInAnimation: FadeInAnimation?) {
         let containerView = UIView(frame: UIScreen.main.bounds)
-
+        
         containerView.backgroundColor = activityData.backgroundColor
         containerView.restorationIdentifier = restorationIdentifier
         containerView.translatesAutoresizingMaskIntoConstraints = false
         fadeInAnimation?(containerView)
-
+        
         let activityIndicatorView = NVActivityIndicatorView(
             frame: CGRect(x: 0, y: 0, width: activityData.size.width, height: activityData.size.height),
             type: activityData.type,
             color: activityData.color,
             padding: activityData.padding)
-
+        
         activityIndicatorView.startAnimating()
         activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(activityIndicatorView)
-
+        
         // Add constraints for `activityIndicatorView`.
         ({
             let xConstraint = NSLayoutConstraint(item: containerView, attribute: .centerX, relatedBy: .equal, toItem: activityIndicatorView, attribute: .centerX, multiplier: 1, constant: 0)
             let yConstraint = NSLayoutConstraint(item: containerView, attribute: .centerY, relatedBy: .equal, toItem: activityIndicatorView, attribute: .centerY, multiplier: 1, constant: 0)
-
+            
             containerView.addConstraints([xConstraint, yConstraint])
             }())
-
+        
         messageLabel.font = activityData.messageFont
         messageLabel.textColor = activityData.textColor
         messageLabel.text = activityData.message
         containerView.addSubview(messageLabel)
-
+        
         // Add constraints for `messageLabel`.
         ({
             let leadingConstraint = NSLayoutConstraint(item: containerView, attribute: .leading, relatedBy: .equal, toItem: messageLabel, attribute: .leading, multiplier: 1, constant: -8)
             let trailingConstraint = NSLayoutConstraint(item: containerView, attribute: .trailing, relatedBy: .equal, toItem: messageLabel, attribute: .trailing, multiplier: 1, constant: 8)
-
+            
             containerView.addConstraints([leadingConstraint, trailingConstraint])
             }())
         ({
             let spacingConstraint = NSLayoutConstraint(item: messageLabel, attribute: .top, relatedBy: .equal, toItem: activityIndicatorView, attribute: .bottom, multiplier: 1, constant: activityData.messageSpacing)
-
+            
             containerView.addConstraint(spacingConstraint)
             }())
-
-        guard let keyWindow = UIApplication.shared.windows.last else { return }
-
-        keyWindow.addSubview(containerView)
-
-        // Add constraints for `containerView`.
-        ({
-            let leadingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .leading, relatedBy: .equal, toItem: containerView, attribute: .leading, multiplier: 1, constant: 0)
-            let trailingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: containerView, attribute: .trailing, multiplier: 1, constant: 0)
-            let topConstraint = NSLayoutConstraint(item: keyWindow, attribute: .top, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1, constant: 0)
-            let bottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: containerView, attribute: .bottom, multiplier: 1, constant: 0)
-
-            keyWindow.addConstraints([leadingConstraint, trailingConstraint, topConstraint, bottomConstraint])
-            }())
+        
+        if #available(iOS 13.0, *) {
+            guard let keyWindow = UIApplication.shared.keyWindow else { return }
+            
+            keyWindow.addSubview(containerView)
+            
+            // Add constraints for `containerView`.
+            ({
+                let leadingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .leading, relatedBy: .equal, toItem: containerView, attribute: .leading, multiplier: 1, constant: 0)
+                let trailingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: containerView, attribute: .trailing, multiplier: 1, constant: 0)
+                let topConstraint = NSLayoutConstraint(item: keyWindow, attribute: .top, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1, constant: 0)
+                let bottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: containerView, attribute: .bottom, multiplier: 1, constant: 0)
+                
+                keyWindow.addConstraints([leadingConstraint, trailingConstraint, topConstraint, bottomConstraint])
+                }())
+        } else {
+            guard let keyWindow = UIApplication.shared.windows.last else { return }
+            
+            keyWindow.addSubview(containerView)
+            
+            // Add constraints for `containerView`.
+            ({
+                let leadingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .leading, relatedBy: .equal, toItem: containerView, attribute: .leading, multiplier: 1, constant: 0)
+                let trailingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: containerView, attribute: .trailing, multiplier: 1, constant: 0)
+                let topConstraint = NSLayoutConstraint(item: keyWindow, attribute: .top, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1, constant: 0)
+                let bottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: containerView, attribute: .bottom, multiplier: 1, constant: 0)
+                
+                keyWindow.addConstraints([leadingConstraint, trailingConstraint, topConstraint, bottomConstraint])
+                }())
+        }
     }
 
     fileprivate func hide(_ fadeOutAnimation: FadeOutAnimation?) {
