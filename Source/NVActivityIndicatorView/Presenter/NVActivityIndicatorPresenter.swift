@@ -302,21 +302,54 @@ public final class NVActivityIndicatorPresenter {
             containerView.addConstraint(spacingConstraint)
             }())
         
-        if #available(iOS 13.0, *) {
-            guard let keyWindow = UIApplication.shared.keyWindow else { return }
-            
-            keyWindow.addSubview(containerView)
-            
-            // Add constraints for `containerView`.
-            ({
-                let leadingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .leading, relatedBy: .equal, toItem: containerView, attribute: .leading, multiplier: 1, constant: 0)
-                let trailingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: containerView, attribute: .trailing, multiplier: 1, constant: 0)
-                let topConstraint = NSLayoutConstraint(item: keyWindow, attribute: .top, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1, constant: 0)
-                let bottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: containerView, attribute: .bottom, multiplier: 1, constant: 0)
+        if #available(iOS 11.0, *) {
+            if #available(iOS 13.0, *) {
+                guard let keyWindow = UIApplication.shared.keyWindow else { return }
                 
-                keyWindow.addConstraints([leadingConstraint, trailingConstraint, topConstraint, bottomConstraint])
-                }())
+                keyWindow.addSubview(containerView)
+                
+                // Add constraints for `containerView`.
+                ({
+                    let leadingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .leading, relatedBy: .equal, toItem: containerView, attribute: .leading, multiplier: 1, constant: 0)
+                    let trailingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: containerView, attribute: .trailing, multiplier: 1, constant: 0)
+                    let topConstraint = NSLayoutConstraint(item: keyWindow, attribute: .top, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1, constant: 0)
+                    let bottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: containerView, attribute: .bottom, multiplier: 1, constant: 0)
+                    
+                    keyWindow.addConstraints([leadingConstraint, trailingConstraint, topConstraint, bottomConstraint])
+                    }())
+            } else if let window = UIApplication.shared.windows.first, window.safeAreaInsets.bottom > 0.0 {
+                guard let keyWindow = UIApplication.shared.keyWindow else { return }
+                
+                keyWindow.addSubview(containerView)
+                
+                // Add constraints for `containerView`.
+                ({
+                    let leadingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .leading, relatedBy: .equal, toItem: containerView, attribute: .leading, multiplier: 1, constant: 0)
+                    let trailingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: containerView, attribute: .trailing, multiplier: 1, constant: 0)
+                    let topConstraint = NSLayoutConstraint(item: keyWindow, attribute: .top, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1, constant: 0)
+                    let bottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: containerView, attribute: .bottom, multiplier: 1, constant: 0)
+                    
+                    keyWindow.addConstraints([leadingConstraint, trailingConstraint, topConstraint, bottomConstraint])
+                    }())
+
+            }
+            else {
+                guard let keyWindow = UIApplication.shared.windows.last else { return }
+                
+                keyWindow.addSubview(containerView)
+                
+                // Add constraints for `containerView`.
+                ({
+                    let leadingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .leading, relatedBy: .equal, toItem: containerView, attribute: .leading, multiplier: 1, constant: 0)
+                    let trailingConstraint = NSLayoutConstraint(item: keyWindow, attribute: .trailing, relatedBy: .equal, toItem: containerView, attribute: .trailing, multiplier: 1, constant: 0)
+                    let topConstraint = NSLayoutConstraint(item: keyWindow, attribute: .top, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1, constant: 0)
+                    let bottomConstraint = NSLayoutConstraint(item: keyWindow, attribute: .bottom, relatedBy: .equal, toItem: containerView, attribute: .bottom, multiplier: 1, constant: 0)
+                    
+                    keyWindow.addConstraints([leadingConstraint, trailingConstraint, topConstraint, bottomConstraint])
+                    }())
+            }
         } else {
+            // Fallback on earlier versions
             guard let keyWindow = UIApplication.shared.windows.last else { return }
             
             keyWindow.addSubview(containerView)
@@ -330,6 +363,7 @@ public final class NVActivityIndicatorPresenter {
                 
                 keyWindow.addConstraints([leadingConstraint, trailingConstraint, topConstraint, bottomConstraint])
                 }())
+
         }
     }
 
